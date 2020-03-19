@@ -13,8 +13,8 @@ G2 = tf(2, [0.5, 1, 2]);
 path = '../';
 figure
 hold on
-plot(t1, y1);
-plot(t2, y2);
+stairs(t1, y1);
+stairs(t2, y2);
 % rasters = {'png', 'bmp', 'jpg', 'tikz'};
 rasters = {'pdf'};
 xlabel('time')
@@ -39,14 +39,3 @@ loglog(5, 100, 'bo')
 f2p('log', 'xscale', 'log', 'xlim', [-2, 2], 'Xtol', 0.0, 'Ytol', 1,...
     'yscale', 'log', 'Ylim', [-1, 7], 'Xsplit', 2,'Ysplit', 7, 'extension', 'pdf')
 f = get(gcf);
-
-%%
-close all
-% figure
-% hold on
-x = 0:0.01:3;
-
-semilogy(x, 10.^x)
-hold on
-semilogy(2, 10^(2*1.4), 'bo')
-semilogy(2, 10^(2*0.6), 'ro')

@@ -142,7 +142,7 @@ if ~r.ignore
     xdmin = inf;
     xdmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~strcmp(f.CurrentAxes.Children(2).Type, 'patch')
+        if ~strcmp(f.CurrentAxes.Children(k).Type, 'patch')
             xdmin = min([xdmin, f.CurrentAxes.Children(k).XData]);
             xdmax = max([xdmax, f.CurrentAxes.Children(k).XData]);
         end
@@ -155,7 +155,7 @@ if ~r.ignore
     ydmin = inf;
     ydmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~strcmp(f.CurrentAxes.Children(2).Type, 'patch')
+        if ~strcmp(f.CurrentAxes.Children(k).Type, 'patch')
             ydmin = min([ydmin, f.CurrentAxes.Children(k).YData]);
             ydmax = max([ydmax, f.CurrentAxes.Children(k).YData]);
         end
