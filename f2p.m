@@ -54,6 +54,8 @@ end
 
 %% get current figure data and defaults
 f = gcf;
+axes  = f.Children;
+lines = axes.Children;
 try
     Xsplits = length(f.CurrentAxes.XTick)-1;
     Ysplits = length(f.CurrentAxes.YTick)-1;
@@ -142,7 +144,7 @@ if ~r.ignore
     xdmin = inf;
     xdmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~strcmp(f.CurrentAxes.Children(k).Type, 'patch')
+        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text'))
             xdmin = min([xdmin, f.CurrentAxes.Children(k).XData]);
             xdmax = max([xdmax, f.CurrentAxes.Children(k).XData]);
         end
@@ -155,7 +157,7 @@ if ~r.ignore
     ydmin = inf;
     ydmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~strcmp(f.CurrentAxes.Children(k).Type, 'patch')
+        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text'))
             ydmin = min([ydmin, f.CurrentAxes.Children(k).YData]);
             ydmax = max([ydmax, f.CurrentAxes.Children(k).YData]);
         end
@@ -241,7 +243,15 @@ end
 %% sets linewidth
 if ~r.ignore
     if r.LineWidth > 0
-        set(f.CurrentAxes.Children, 'LineWidth', r.LineWidth);
+        for k = 1:1:length(lines)
+%             if strcmp(lines(k).Marker, 'none')
+                set(lines(k), 'LineWidth', r.LineWidth);
+%             end
+%             if ~strcmp(lines(k).Marker, 'none')
+                % code will sometime follow
+%             end
+        end
+        
     end
     
     if (r.NoLabels == true)
