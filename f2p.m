@@ -148,8 +148,8 @@ if ~r.ignore && (numel(axis)/2 == 2)
     xdmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
         if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text') || strcmp(f.CurrentAxes.Children(k).Type, 'surface'))
-            xdmin = min([xdmin, f.CurrentAxes.Children(k).XData]);
-            xdmax = max([xdmax, f.CurrentAxes.Children(k).XData]);
+            xdmin = min([xdmin, min(f.CurrentAxes.Children(k).XData)]);
+            xdmax = max([xdmax, max(f.CurrentAxes.Children(k).XData)]);
         end
     end
     xdatamin = floor(log10(xdmin));
@@ -161,8 +161,8 @@ if ~r.ignore && (numel(axis)/2 == 2)
     ydmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
         if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text') || strcmp(f.CurrentAxes.Children(k).Type, 'surface'))
-            ydmin = min([ydmin, f.CurrentAxes.Children(k).YData]);
-            ydmax = max([ydmax, f.CurrentAxes.Children(k).YData]);
+            ydmin = min([ydmin, min(f.CurrentAxes.Children(k).YData)]);
+            ydmax = max([ydmax, max(f.CurrentAxes.Children(k).YData)]);
         end
     end
     ydmin = floor(log10(ydmin));
