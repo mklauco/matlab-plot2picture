@@ -1,5 +1,5 @@
 function f2p(name, varargin)
-%% Plot to Picture - f2p: figure to picture
+%% Plot to Picture - f2p: figure to picture version 2.8
 %
 %   Generates picture with extension of users choice from a plot/figure.
 %
@@ -41,7 +41,7 @@ function f2p(name, varargin)
 %                  except TikZ. Default is [27.94, 21.59]cm or [11, 8.5]",
 %                  which is default Matlab dimension of the figure as
 %                  seen on the screen.
-%       Save: {true|false}, default true, if false, p2p() only formats the
+%       Save: {true|false}, default true, if false, f2p() only formats the
 %             figure, but it will not save it
 %
 
@@ -139,12 +139,15 @@ if ~r.ignore
     end
 end
 %% set limits
-if ~r.ignore
+if ~r.ignore 
     % checks limits and set a new limits if aplicable
     xdmin = inf;
     xdmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text'))
+        if strcmp(f.CurrentAxes.Children(1).Type, 'surface')
+            warning('Automatic limits handling disabled for 3D plots, will be available in v3.0.')
+        end
+        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text') || strcmp(f.CurrentAxes.Children(k).Type, 'surface'))
             xdmin = min([xdmin, f.CurrentAxes.Children(k).XData]);
             xdmax = max([xdmax, f.CurrentAxes.Children(k).XData]);
         end
@@ -157,7 +160,7 @@ if ~r.ignore
     ydmin = inf;
     ydmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text'))
+        if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text') || strcmp(f.CurrentAxes.Children(k).Type, 'surface'))
             ydmin = min([ydmin, f.CurrentAxes.Children(k).YData]);
             ydmax = max([ydmax, f.CurrentAxes.Children(k).YData]);
         end
