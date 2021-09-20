@@ -139,14 +139,14 @@ if ~r.ignore
     end
 end
 %% set limits
-if ~r.ignore 
+if numel(axis)/2 == 3
+    warning('Automatic limits handling disabled for 3D plots, will be available in v3.0.')
+end
+if ~r.ignore && (numel(axis)/2 == 2)
     % checks limits and set a new limits if aplicable
     xdmin = inf;
     xdmax = -inf;
     for k = 1:1:length(f.CurrentAxes.Children)
-        if strcmp(f.CurrentAxes.Children(1).Type, 'surface')
-            warning('Automatic limits handling disabled for 3D plots, will be available in v3.0.')
-        end
         if ~(strcmp(f.CurrentAxes.Children(k).Type, 'patch') || strcmp(f.CurrentAxes.Children(k).Type, 'text') || strcmp(f.CurrentAxes.Children(k).Type, 'surface'))
             xdmin = min([xdmin, f.CurrentAxes.Children(k).XData]);
             xdmax = max([xdmax, f.CurrentAxes.Children(k).XData]);
@@ -247,12 +247,12 @@ end
 if ~r.ignore
     if r.LineWidth > 0
         for k = 1:1:length(lines)
-%             if strcmp(lines(k).Marker, 'none')
-                set(lines(k), 'LineWidth', r.LineWidth);
-%             end
-%             if ~strcmp(lines(k).Marker, 'none')
-                % code will sometime follow
-%             end
+            %             if strcmp(lines(k).Marker, 'none')
+            set(lines(k), 'LineWidth', r.LineWidth);
+            %             end
+            %             if ~strcmp(lines(k).Marker, 'none')
+            % code will sometime follow
+            %             end
         end
         
     end
