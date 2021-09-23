@@ -246,13 +246,10 @@ end
 %% sets linewidth
 if ~r.ignore
     if r.LineWidth > 0
-        for k = 1:1:length(lines)
-            %             if strcmp(lines(k).Marker, 'none')
-            set(lines(k), 'LineWidth', r.LineWidth);
-            %             end
-            %             if ~strcmp(lines(k).Marker, 'none')
-            % code will sometime follow
-            %             end
+        for k = 1:1:length(f.CurrentAxes.Children)
+            if strcmp(f.CurrentAxes.Children(k).Type, 'line')
+                set(f.CurrentAxes.Children(k), 'LineWidth', r.LineWidth);
+            end
         end
         
     end
