@@ -182,6 +182,7 @@ if ~r.ignore && (numel(axis)/2 == 2)
     if ( (r.YLim(1) ~= f.CurrentAxes.YLim(1)) || ...
             (r.YLim(2) ~= f.CurrentAxes.YLim(2)) )
         set(f.CurrentAxes, 'YLim', r.YLim);
+        set(f.CurrentAxes, 'XLim', r.XLim);
         if strcmp(r.Yscale, 'log')
             set(f.CurrentAxes, 'Ylim', [10^(r.YLim(1)), 10^(r.YLim(2))]);
         end
@@ -247,7 +248,8 @@ end
 if ~r.ignore
     if r.LineWidth > 0
         for k = 1:1:length(f.CurrentAxes.Children)
-            if strcmp(f.CurrentAxes.Children(k).Type, 'line')
+            if strcmp(f.CurrentAxes.Children(k).Type, 'line') ||...
+                    strcmp(f.CurrentAxes.Children(k).Type, 'stair')
                 set(f.CurrentAxes.Children(k), 'LineWidth', r.LineWidth);
             end
         end
