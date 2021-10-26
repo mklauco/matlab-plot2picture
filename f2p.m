@@ -53,6 +53,7 @@ else
 end
 
 %% get current figure data and defaults
+clear f
 f = gcf;
 axes  = f.Children;
 lines = axes.Children;
@@ -74,9 +75,16 @@ ext = {'pdf', 'eps', 'tikz', 'png', 'bmp', 'jpg'};
 
 TikzOptions = [ 'ylabel style={font=\scriptsize},',...
     'xlabel style={font=\scriptsize},',...
-    'xticklabel style={font=\scriptsize, /pgf/number format/.cd, 1000 sep={}},'...
-    'yticklabel style={font=\scriptsize},'...
+    'scaled y ticks = base 10:0,',...
+    'scaled x ticks = base 10:0,',...
+    'xticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=2,1000 sep={},/tikz/.cd},'...
+    'yticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=2,1000 sep={},/tikz/.cd},'...
     'legend style={font=\scriptsize}'];
+
+
+%     'scaled y ticks = true,',....
+%     'scaled x ticks = true,',....
+%     /pgf/number format/.cd, 1000 sep={}
 
 p.addParameter('XLim', xlim, @isvector);
 p.addParameter('YLim', ylim, @isvector);
@@ -117,13 +125,13 @@ if ~r.ignore
     else
         grid off
     end
-    
+
     if r.YMinorGrid
         set(f.CurrentAxes, 'YMinorGrid', 'on')
     else
         set(f.CurrentAxes, 'YMinorGrid', 'off')
     end
-    
+
     if r.XMinorGrid
         set(f.CurrentAxes, 'XMinorGrid', 'on')
     else
@@ -170,7 +178,7 @@ if ~r.ignore && (numel(axis)/2 == 2)
     if strcmp(r.Yscale, 'log')
         set(f.CurrentAxes, 'Ylim', [10^(ydmin), 10^(ydmax)]);
     end
-    
+
     if ( (r.XLim(1) ~= f.CurrentAxes.XLim(1)) || ...
             (r.XLim(2) ~= f.CurrentAxes.XLim(2)) )
         set(f.CurrentAxes, 'XLim', r.XLim);
@@ -178,7 +186,7 @@ if ~r.ignore && (numel(axis)/2 == 2)
             set(f.CurrentAxes, 'Xlim', [10^(r.XLim(1)), 10^(r.XLim(2))]);
         end
     end
-    
+
     if ( (r.YLim(1) ~= f.CurrentAxes.YLim(1)) || ...
             (r.YLim(2) ~= f.CurrentAxes.YLim(2)) )
         set(f.CurrentAxes, 'YLim', r.YLim);
@@ -187,7 +195,7 @@ if ~r.ignore && (numel(axis)/2 == 2)
             set(f.CurrentAxes, 'Ylim', [10^(r.YLim(1)), 10^(r.YLim(2))]);
         end
     end
-    
+
     % obtain limits and calculate shrinked figure space and set values
     limits = obtain_limits();
     if strcmp(r.Xscale, 'linear')
@@ -224,7 +232,7 @@ if ~r.ignore && (numel(axis)/2 == 2)
         set(f.CurrentAxes, 'Ytick', limits.y.tick);
     elseif strcmp(r.Yscale, 'log')
         ylimNew = f.CurrentAxes.YLim;
-        
+
         ylimLogMin = floor(log10(ylimNew(1)));
         ylimLogMax = floor(log10(ylimNew(2)));
         ylimLogLength = ylimLogMax - ylimLogMin;
@@ -234,14 +242,14 @@ if ~r.ignore && (numel(axis)/2 == 2)
             ystep = 1;
         end
         ytikcs = 10.^(ylimLogMin:ystep:ylimLogMax);
-        
+
         ylimNew(1) = 10^(log10(ylimNew(1)) - r.Ytol);
         ylimNew(2) = 10^(log10(ylimNew(2)) + r.Ytol);
         set(f.CurrentAxes, 'Ylim', ylimNew)
         set(f.CurrentAxes, 'Ytick', ytikcs);
         set(f.CurrentAxes, 'Yscale', 'log')
-        
-        
+
+
     end
 end
 %% sets linewidth
@@ -253,43 +261,48 @@ if ~r.ignore
                 set(f.CurrentAxes.Children(k), 'LineWidth', r.LineWidth);
             end
         end
-        
+
     end
-    
+
     if (r.NoLabels == true)
         set(gca, 'Xticklabel', {}, 'Yticklabel', {})
     end
 end
 %% save the figure
 ext = r.Extension;
+
+set(f, 'PaperUnits', 'centimeters');
+set(f, 'Units', 'centimeters');
+set(f, 'PaperType', '<custom>');
+set(f, 'PaperSize', r.PaperSize);
+set(f, 'PaperPosition', [0, 0, r.PaperSize(1), r.PaperSize(2)]);
+
 if r.Save && strcmp(ext, 'empty')
-    %     if strcmp(ext, 'empty')
-    %         error('Extension not specified, figure not saved.')
-    %     end
+
 elseif r.Save && ~strcmp(ext, 'empty')
-    % set the full path to the saved figure
     saveNamePath = [r.Path, '/', name];
-    
+
     if strcmp(ext, 'png')
         driver = '-dpng';
+        get(f)
         print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
     end
-    
+
     if strcmp(ext, 'bmp')
         driver = '-dbmp';
         print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
     end
-    
+
     if strcmp(ext, 'jpg')
         driver = '-djpeg';
         print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
     end
-    
+
     if strcmp(ext, 'eps')
         driver = '-depsc2';
         print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
     end
-    
+
     if strcmp(ext, 'pdf')
         driver = '-dpdf';
         set(f, 'PaperUnits', 'centimeters');
@@ -300,7 +313,7 @@ elseif r.Save && ~strcmp(ext, 'empty')
         set(f, 'PaperPosition', [0, 0, r.PaperSize(1), r.PaperSize(2)]);
         print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
     end
-    
+
     if strcmp(ext, 'tikz')
         if exist('matlab2tikz', 'file') == 2
             saveNamePathTikz = [r.Path, '/', name, '.tikz'];
@@ -313,15 +326,15 @@ elseif r.Save && ~strcmp(ext, 'empty')
             error('External function/toolbox "matlab2tikz" required.')
         end
     end
-    
+
     s = dir([saveNamePath, '.', ext]);
     file_size = ceil(s.bytes)/1000;
     fprintf(['Figure "', name, '.', ...
         r.Extension, '" of size ', num2str(file_size), ' kB, saved.\n'])
-    
+
     if (strcmp(ext, 'tikz')) && (file_size > 30)
         fprintf('\n')
-        warning('TikZ files larger than 30kB can cause compilation issues. Try to reduce the number of points in the figure to decrease the filesize.')
+        fprintf('!! TikZ files larger than 30kB can cause compilation issues. Try to reduce the number of points in the figure to decrease the filesize.')
         fprintf('\n')
     end
 elseif ~r.Save
