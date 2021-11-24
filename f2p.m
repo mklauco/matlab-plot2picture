@@ -47,16 +47,16 @@ function f2p(name, varargin)
 
 %% Body of the main fuction
 if ischar(name)
-    set(gcf, 'name', name, 'NumberTitle', 'off')
+    set(gcf, 'name', name, 'NumberTitle', 'off');
 else
-    error('Input must be single string or structure')
+    error('Input must be single string or structure');
 end
 
 %% get current figure data and defaults
 clear f
 f = gcf;
-axes  = f.Children;
-lines = axes.Children;
+% axes  = f.Children;
+% lines = axes.Children;
 try
     Xsplits = length(f.CurrentAxes.XTick)-1;
     Ysplits = length(f.CurrentAxes.YTick)-1;
@@ -127,15 +127,15 @@ if ~r.ignore
     end
 
     if r.YMinorGrid
-        set(f.CurrentAxes, 'YMinorGrid', 'on')
+        set(f.CurrentAxes, 'YMinorGrid', 'on');
     else
-        set(f.CurrentAxes, 'YMinorGrid', 'off')
+        set(f.CurrentAxes, 'YMinorGrid', 'off');
     end
 
     if r.XMinorGrid
-        set(f.CurrentAxes, 'XMinorGrid', 'on')
+        set(f.CurrentAxes, 'XMinorGrid', 'on');
     else
-        set(f.CurrentAxes, 'XMinorGrid', 'off')
+        set(f.CurrentAxes, 'XMinorGrid', 'off');
     end
 end
 %% box on/off
@@ -150,6 +150,7 @@ end
 if numel(axis)/2 == 3
     warning('Automatic limits handling disabled for 3D plots, will be available in v3.0.')
 end
+
 if ~r.ignore && (numel(axis)/2 == 2)
     % checks limits and set a new limits if aplicable
     xdmin = inf;
@@ -219,9 +220,9 @@ if ~r.ignore && (numel(axis)/2 == 2)
         xtikcs = 10.^(xlimLogMin:xstep:xlimLogMax);
         xlimNew(1) = 10^(log10(xlimNew(1)) - r.Xtol);
         xlimNew(2) = 10^(log10(xlimNew(2)) + r.Xtol);
-        set(f.CurrentAxes, 'Xlim', xlimNew)
+        set(f.CurrentAxes, 'Xlim', xlimNew);
         set(f.CurrentAxes, 'Xtick', xtikcs);
-        set(f.CurrentAxes, 'Xscale', 'log')
+        set(f.CurrentAxes, 'Xscale', 'log');
     end
     if strcmp(r.Yscale, 'linear')
         limits.y.lim_new(1) = limits.y.lim(1) - limits.y.range*r.Ytol;
@@ -245,9 +246,9 @@ if ~r.ignore && (numel(axis)/2 == 2)
 
         ylimNew(1) = 10^(log10(ylimNew(1)) - r.Ytol);
         ylimNew(2) = 10^(log10(ylimNew(2)) + r.Ytol);
-        set(f.CurrentAxes, 'Ylim', ylimNew)
+        set(f.CurrentAxes, 'Ylim', ylimNew);
         set(f.CurrentAxes, 'Ytick', ytikcs);
-        set(f.CurrentAxes, 'Yscale', 'log')
+        set(f.CurrentAxes, 'Yscale', 'log');
 
 
     end
@@ -265,7 +266,7 @@ if ~r.ignore
     end
 
     if (r.NoLabels == true)
-        set(gca, 'Xticklabel', {}, 'Yticklabel', {})
+        set(gca, 'Xticklabel', {}, 'Yticklabel', {});
     end
 end
 %% save the figure
@@ -284,23 +285,22 @@ elseif r.Save && ~strcmp(ext, 'empty')
 
     if strcmp(ext, 'png')
         driver = '-dpng';
-        get(f)
-        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
+        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath);
     end
 
     if strcmp(ext, 'bmp')
         driver = '-dbmp';
-        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
+        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath);
     end
 
     if strcmp(ext, 'jpg')
         driver = '-djpeg';
-        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
+        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath);
     end
 
     if strcmp(ext, 'eps')
         driver = '-depsc2';
-        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
+        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath);
     end
 
     if strcmp(ext, 'pdf')
@@ -311,7 +311,7 @@ elseif r.Save && ~strcmp(ext, 'empty')
         set(f, 'PaperSize', r.PaperSize);
         set(f, 'PaperPositionMode', 'manual');
         set(f, 'PaperPosition', [0, 0, r.PaperSize(1), r.PaperSize(2)]);
-        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath)
+        print(f, driver, ['-r', num2str(r.dpi)], saveNamePath);
     end
 
     if strcmp(ext, 'tikz')
@@ -323,19 +323,19 @@ elseif r.Save && ~strcmp(ext, 'empty')
                 'extraaxisoptions', r.TikZOptions, ...
                 'colormap', colormap);
         else
-            error('External function/toolbox "matlab2tikz" required.')
+            error('External function/toolbox "matlab2tikz" required.');
         end
     end
 
     s = dir([saveNamePath, '.', ext]);
     file_size = ceil(s.bytes)/1000;
     fprintf(['Figure "', name, '.', ...
-        r.Extension, '" of size ', num2str(file_size), ' kB, saved.\n'])
+        r.Extension, '" of size ', num2str(file_size), ' kB, saved.\n']);
 
     if (strcmp(ext, 'tikz')) && (file_size > 30)
-        fprintf('\n')
-        fprintf('!! TikZ files larger than 30kB can cause compilation issues. Try to reduce the number of points in the figure to decrease the filesize.')
-        fprintf('\n')
+        fprintf('\n');
+        fprintf('!! TikZ files larger than 30kB can cause compilation issues. Try to reduce the number of points in the figure to decrease the filesize.');
+        fprintf('\n');
     end
 elseif ~r.Save
     %     warning('')
