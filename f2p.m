@@ -73,18 +73,12 @@ end
 p = inputParser;
 ext = {'pdf', 'eps', 'tikz', 'png', 'bmp', 'jpg'};
 
+
 TikzOptions = [ 'ylabel style={font=\scriptsize},',...
     'xlabel style={font=\scriptsize},',...
     'scaled y ticks = base 10:0,',...
     'scaled x ticks = base 10:0,',...
-    'xticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=2,1000 sep={},/tikz/.cd},'...
-    'yticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=2,1000 sep={},/tikz/.cd},'...
-    'legend style={font=\scriptsize}'];
-
-
-%     'scaled y ticks = true,',....
-%     'scaled x ticks = true,',....
-%     /pgf/number format/.cd, 1000 sep={}
+    'legend style={font=\scriptsize},'];
 
 p.addParameter('XLim', xlim, @isvector);
 p.addParameter('YLim', ylim, @isvector);
@@ -110,10 +104,13 @@ p.addParameter('Save', true, @islogical);
 p.addParameter('dpi', 300, @isnumeric);
 p.addParameter('TikZOptions', TikzOptions, @ischar);
 p.addParameter('ignore', false, @islogical);
+p.addParameter('xPrecision', 0, @isnumeric);
+p.addParameter('yPrecision', 0, @isnumeric);
 
 % pars inputs
 parse(p, varargin{:});
 r = p.Results;
+
 
 % parsize: inches to cm buy default
 % r.PaperSize = r.PaperSize/2.54;
@@ -316,12 +313,27 @@ elseif r.Save && ~strcmp(ext, 'empty')
 
     if strcmp(ext, 'tikz')
         if exist('matlab2tikz', 'file') == 2
+            eopt = [r.TikZOptions, ...
+                'xticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=', num2str(r.xPrecision) ,',1000 sep={},/tikz/.cd},'...
+                'yticklabel style={font=\scriptsize, /pgf/number format/.cd,fixed,fixed zerofill,precision=', num2str(r.yPrecision) ,',1000 sep={},/tikz/.cd}'];
+
             saveNamePathTikz = [r.Path, '/', name, '.tikz'];
             matlab2tikz(saveNamePathTikz, 'height', '\figureheight',...
                 'width', '\figurewidth', 'parseStrings', false,...
                 'showInfo', false, 'floatFormat', '%.4g', ...
-                'extraaxisoptions', r.TikZOptions, ...
+                'extraaxisoptions', eopt, ...
                 'colormap', colormap);
+        file = fopen(saveNamePathTikz, 'rt');
+        content = fread(file);
+        fclose(file);
+
+%         content = char(content);
+        content = strrep(content,'height=0.962\figureheight,','height=\figureheight,');
+        content = strrep(content,'width=0.951\figurewidth,','width=\figurewidth,');
+        
+        fid  = fopen(saveNamePathTikz, 'wt');
+        fwrite(fid, content);
+        fclose(fid);
         else
             error('External function/toolbox "matlab2tikz" required.');
         end
