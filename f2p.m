@@ -329,6 +329,7 @@ elseif r.Save && ~strcmp(ext, 'empty')
 
 %         content = char(content);
         content = strrep(content,'height=0.962\figureheight,','height=\figureheight,');
+        content = strrep(content,'height=0.975\figureheight,','height=\figureheight,');
         content = strrep(content,'width=0.951\figurewidth,','width=\figurewidth,');
         
         fid  = fopen(saveNamePathTikz, 'wt');
