@@ -44,6 +44,13 @@ function f2p(name, varargin)
 %       Save: {true|false}, default true, if false, f2p() only formats the
 %             figure, but it will not save it
 %
+%       ! For TikZ export are aditional available parameters:
+%           xPrecision: number of decimal places on x-axis {0, 1, 2, ...},
+%                       default 0
+%           yPrecision: number of decimal places on x-axis {0, 1, 2, ...},
+%                       default 0
+%           
+%
 
 %% Body of the main fuction
 if ischar(name)
